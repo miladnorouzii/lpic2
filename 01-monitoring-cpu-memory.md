@@ -27,7 +27,7 @@ top - display Linux processes
 
 1 for show cpu core
 
-shift + < or > for memory sort
+shift + < or > sort top based on different culoms
 shift + p # sort based CPU usage
 shift + m # sort based memory usage
 press c   # shows absolute patch of process
