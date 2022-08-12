@@ -387,12 +387,266 @@ apt install python
 ```
 To visit Collectd-web interface and display statistics about your host, open a browser and point the URL at your server IP Address and port 8888 using HTTP protocol.
 
+How does it work? Collectd uses data sets which are defines in types.db:
+
+```bash
+ls /usr/share/collectd/
+types.db
+
+root@ubuntu-srv:~#  cat /usr/share/collectd/types.db | grep cpu
+cpu                     value:DERIVE:0:U
+cpu_affinity            value:GAUGE:0:1
+cpufreq                 value:GAUGE:0:U
+ps_cputime              user:DERIVE:0:U, syst:DERIVE:0:U
+redis_command_cputime   value:DERIVE:0:U
+vcpu                    value:GAUGE:0:U
+virt_cpu_total          value:DERIVE:0:U
+virt_vcpu               value:DERIVE:0:U
+```
+
+to gather data in a special format(Round Robin DataBase ) in /var/lib/directory/rrd directory which we previously enabled in collectd.conf:
+
+```bash
+root@ubuntu-srv:~# cat /etc/collectd/collectd.conf | grep rrd
+#LoadPlugin rrdcached
+LoadPlugin rrdtool
+#<Plugin rrdcached>
+#	DaemonAddress "unix:/var/run/rrdcached.sock"
+#	DataDir "/var/lib/rrdcached/db/collectd"
+<Plugin rrdtool>
+	DataDir "/var/lib/collectd/rrd"
+```
+```bash
+root@ubuntu-srv:~#  tree /var/lib/collectd/rrd
+/var/lib/collectd/rrd
+└── ubuntu-srv
+    ├── cpu-0
+    │   ├── cpu-idle.rrd
+    │   ├── cpu-interrupt.rrd
+    │   ├── cpu-nice.rrd
+    │   ├── cpu-softirq.rrd
+    │   ├── cpu-steal.rrd
+    │   ├── cpu-system.rrd
+    │   ├── cpu-user.rrd
+    │   └── cpu-wait.rrd
+    ├── cpu-1
+    │   ├── cpu-idle.rrd
+    │   ├── cpu-interrupt.rrd
+    │   ├── cpu-nice.rrd
+    │   ├── cpu-softirq.rrd
+    │   ├── cpu-steal.rrd
+    │   ├── cpu-system.rrd
+    │   ├── cpu-user.rrd
+    │   └── cpu-wait.rrd
+    ├── cpu-2
+    │   ├── cpu-idle.rrd
+    │   ├── cpu-interrupt.rrd
+    │   ├── cpu-nice.rrd
+    │   ├── cpu-softirq.rrd
+    │   ├── cpu-steal.rrd
+    │   ├── cpu-system.rrd
+    │   ├── cpu-user.rrd
+    │   └── cpu-wait.rrd
+    ├── cpu-3
+    │   ├── cpu-idle.rrd
+    │   ├── cpu-interrupt.rrd
+    │   ├── cpu-nice.rrd
+    │   ├── cpu-softirq.rrd
+    │   ├── cpu-steal.rrd
+    │   ├── cpu-system.rrd
+    │   ├── cpu-user.rrd
+    │   └── cpu-wait.rrd
+    ├── df-boot
+    │   ├── df_complex-free.rrd
+    │   ├── df_complex-reserved.rrd
+    │   └── df_complex-used.rrd
+    ├── df-root
+    │   ├── df_complex-free.rrd
+    │   ├── df_complex-reserved.rrd
+    │   └── df_complex-used.rrd
+    ├── df-snap-core20-1328
+    │   ├── df_complex-free.rrd
+    │   ├── df_complex-reserved.rrd
+    │   └── df_complex-used.rrd
+    ├── df-snap-lxd-21835
+    │   ├── df_complex-free.rrd
+    │   ├── df_complex-reserved.rrd
+    │   └── df_complex-used.rrd
+    ├── df-snap-snapd-14978
+    │   ├── df_complex-free.rrd
+    │   ├── df_complex-reserved.rrd
+    │   └── df_complex-used.rrd
+    ├── disk-dm-0
+    │   ├── disk_io_time.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-loop0
+    │   ├── disk_io_time.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-loop1
+    │   ├── disk_io_time.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-loop2
+    │   ├── disk_io_time.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-loop3
+    │   ├── disk_io_time.rrd
+    │   ├── disk_octets.rrd
+    │   └── disk_ops.rrd
+    ├── disk-sda
+    │   ├── disk_io_time.rrd
+    │   ├── disk_merged.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-sda1
+    │   ├── disk_io_time.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-sda2
+    │   ├── disk_io_time.rrd
+    │   ├── disk_merged.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-sda3
+    │   ├── disk_io_time.rrd
+    │   ├── disk_merged.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── disk-sr0
+    │   ├── disk_io_time.rrd
+    │   ├── disk_octets.rrd
+    │   ├── disk_ops.rrd
+    │   └── disk_time.rrd
+    ├── entropy
+    │   └── entropy.rrd
+    ├── interface-ens33
+    │   ├── if_dropped.rrd
+    │   ├── if_errors.rrd
+    │   ├── if_octets.rrd
+    │   └── if_packets.rrd
+    ├── interface-lo
+    │   ├── if_dropped.rrd
+    │   ├── if_errors.rrd
+    │   ├── if_octets.rrd
+    │   └── if_packets.rrd
+    ├── irq
+    │   ├── irq-0.rrd
+    │   ├── irq-12.rrd
+    │   ├── irq-14.rrd
+    │   ├── irq-15.rrd
+    │   ├── irq-16.rrd
+    │   ├── irq-17.rrd
+    │   ├── irq-18.rrd
+    │   ├── irq-19.rrd
+    │   ├── irq-1.rrd
+    │   ├── irq-24.rrd
+    │   ├── irq-25.rrd
+    │   ├── irq-26.rrd
+    │   ├── irq-27.rrd
+    │   ├── irq-28.rrd
+    │   ├── irq-29.rrd
+    │   ├── irq-30.rrd
+    │   ├── irq-31.rrd
+    │   ├── irq-32.rrd
+    │   ├── irq-33.rrd
+    │   ├── irq-34.rrd
+    │   ├── irq-35.rrd
+    │   ├── irq-36.rrd
+    │   ├── irq-37.rrd
+    │   ├── irq-38.rrd
+    │   ├── irq-39.rrd
+    │   ├── irq-40.rrd
+    │   ├── irq-41.rrd
+    │   ├── irq-42.rrd
+    │   ├── irq-43.rrd
+    │   ├── irq-44.rrd
+    │   ├── irq-45.rrd
+    │   ├── irq-46.rrd
+    │   ├── irq-47.rrd
+    │   ├── irq-48.rrd
+    │   ├── irq-49.rrd
+    │   ├── irq-50.rrd
+    │   ├── irq-51.rrd
+    │   ├── irq-52.rrd
+    │   ├── irq-53.rrd
+    │   ├── irq-54.rrd
+    │   ├── irq-55.rrd
+    │   ├── irq-56.rrd
+    │   ├── irq-57.rrd
+    │   ├── irq-58.rrd
+    │   ├── irq-8.rrd
+    │   ├── irq-9.rrd
+    │   ├── irq-CAL.rrd
+    │   ├── irq-DFR.rrd
+    │   ├── irq-ERR.rrd
+    │   ├── irq-IWI.rrd
+    │   ├── irq-LOC.rrd
+    │   ├── irq-MCE.rrd
+    │   ├── irq-MCP.rrd
+    │   ├── irq-MIS.rrd
+    │   ├── irq-NMI.rrd
+    │   ├── irq-NPI.rrd
+    │   ├── irq-PIN.rrd
+    │   ├── irq-PIW.rrd
+    │   ├── irq-PMI.rrd
+    │   ├── irq-RES.rrd
+    │   ├── irq-RTR.rrd
+    │   ├── irq-SPU.rrd
+    │   ├── irq-THR.rrd
+    │   ├── irq-TLB.rrd
+    │   └── irq-TRM.rrd
+    ├── load
+    │   └── load.rrd
+    ├── memory
+    │   ├── memory-buffered.rrd
+    │   ├── memory-cached.rrd
+    │   ├── memory-free.rrd
+    │   ├── memory-slab_recl.rrd
+    │   ├── memory-slab_unrecl.rrd
+    │   └── memory-used.rrd
+    ├── processes
+    │   ├── fork_rate.rrd
+    │   ├── ps_state-blocked.rrd
+    │   ├── ps_state-paging.rrd
+    │   ├── ps_state-running.rrd
+    │   ├── ps_state-sleeping.rrd
+    │   ├── ps_state-stopped.rrd
+    │   └── ps_state-zombies.rrd
+    ├── swap
+    │   ├── swap-cached.rrd
+    │   ├── swap-free.rrd
+    │   ├── swap_io-in.rrd
+    │   ├── swap_io-out.rrd
+    │   └── swap-used.rrd
+    └── users
+        └── users.rrd
+
+29 directories, 183 files
+```
+
+Okey do not forget that the installation process is not part of LPIC exam and based on your distribution and version the installation steps might be different from what we have done here
+
+
 
 
 source:
 
 
 https://www.tecmint.com/install-collectd-and-collectd-web-to-monitor-server-resources-in-linux/
+
 https://zoomadmin.com/HowToInstall/UbuntuPackage/libcgi-pm-perl
+
 https://www.linux.com/training-tutorials/installation-guide-collectd-and-collectd-web-monitor-server-resources-linux/
+
 https://www.linuxsysadmins.com/install-collectd-monitoring-on-linux/
