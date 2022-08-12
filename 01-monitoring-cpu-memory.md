@@ -4,7 +4,7 @@ install ```strees-ng```
 apt install stress-ng
 apt install sysstat
 apt install iotop
-apt install nload iftop  net-tools -y 
+apt install nload iftop iperf net-tools -y 
 ```
 
 ```bash
@@ -222,6 +222,85 @@ Use `iftop` to check live monitoring
 
 ###### nload
 Use `nload` to check interface send and recive network traffic.
+
+###### Speedtest
+
+Firest of all install `iperf` on linux system.
+
+For this test you should have tow linux system and install `iperf` on both of them.
+
+Download `speedtest` on bellow link.
+
+```bash
+wget https://github.com/sivel/speedtest-cli/raw/master/speedtest.py
+```
+
+Edit script and replace `python3` on first line.
+
+```bash 
+chmod +x speedtest.py
+./speedtest.py --simple
+
+Ping: 138.215 ms
+Download: 19.20 Mbit/s
+Upload: 3.27 Mbit/s
+```
+To check list servers
+
+```bash
+./speedtest.py --list
+
+37703) Abramad (Tehran, Iran) [6.53 km]
+32500) PISHGAMAN (Tehran, Iran) [8.94 km]
+37820) Sindad (Tehran, Iran) [8.94 km]
+45095) GreenWeb (Pardis, Iran) [40.40 km]
+37535) MTNIrancell (Mazandaran, Iran) [121.28 km]
+ 7667) ATINET (Hamedan, Iran) [275.73 km]
+ 9795) MTNIrancell (Isfahan, Iran) [340.98 km]
+22243) MCI (Hamrahe Avval) (Tabriz, Iran) [519.78 km]
+ 9890) MTNIrancell (Tabriz, Iran) [519.78 km]
+ 9888) Maxnet (Tabriz, Iran) [519.78 km]
+```
+Every server has an uniq id and you can use id for test with specific server.
+
+```bash 
+./speedtest.py --server 37703
+```
+Use `--share` option for generate link to see graphical modeles
+
+###### iperf
+
+`iperf` is a clinet server tools for checking speed test between tow linux system.
+
+On server side run 
+
+```bash
+iperf -s
+```
+
+On client side run:
+
+```bash
+iperf -c SERVER_IP
+```
+```bash
+iperf -c 192.168.137.128
+------------------------------------------------------------
+Client connecting to 192.168.137.128, TCP port 5001
+TCP window size: 2.50 MByte (default)
+------------------------------------------------------------
+[  3] local 192.168.137.128 port 48418 connected with 192.168.137.128 port 5001
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec  31.7 GBytes  27.3 Gbits/sec
+```
+
+
+
+
+
+
+
+
 
 
 
