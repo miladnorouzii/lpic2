@@ -2,7 +2,8 @@ install ```strees-ng```
 
 ```bash
 apt install stress-ng
-
+apt install sysstat
+apt install iotop
 ```
 
 ```bash
@@ -54,5 +55,17 @@ stress-ng -c 1 # for overload on 1 core
 stress-ng -m 10 # for overload on memory
 
 ```
+
+uptime
+
+```bash
+uptime
+12:10:01 up 45 min,  2 users,  load average: 0.08, 0.07, 0.12
+```
+0.08 load average of last 1 minute
+0.07 load average of last 5 minute
+0.12 load average of last 15 minute
+
+
 
 
