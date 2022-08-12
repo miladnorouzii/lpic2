@@ -4,7 +4,7 @@ install ```strees-ng```
 apt install stress-ng
 apt install sysstat
 apt install iotop
-apt install nload iftop iperf net-tools -y 
+apt install nload iftop iperf net-tools iptraf-ng -y 
 ```
 
 ```bash
@@ -293,22 +293,106 @@ TCP window size: 2.50 MByte (default)
 [ ID] Interval       Transfer     Bandwidth
 [  3]  0.0-10.0 sec  31.7 GBytes  27.3 Gbits/sec
 ```
+###### iptraf
+
+install `iptraf-ng`
+
+```bash
+iptraf-ng
+iptraf-ng -i ens33
+```
+### Monitoring tools
+
+prtg
+cacti
+zabbix
+netdata
+collectd
+
+###### collectd
+
+Install `collectd` on linux server.
+
+```bash
+apt install collectd
+```
+After install `collectd` you should enable plugin to monitor your system.
+
+```bash
+vim /etc/collectd/collectd.conf
+```
+Uncomment the plugin you want to monitor
+
+```
+
+##############################################################################
+# LoadPlugin section                                                         #
+#----------------------------------------------------------------------------#
+# Specify what features to activate.                                         #
+##############################################################################
+
+#LoadPlugin aggregation
+#LoadPlugin amqp
+#LoadPlugin apache
+#LoadPlugin apcups
+#LoadPlugin ascent
+#LoadPlugin barometer
+LoadPlugin battery
+#LoadPlugin bind
+#LoadPlugin ceph
+#LoadPlugin cgroups
+#LoadPlugin chrony
+#LoadPlugin conntrack
+#LoadPlugin contextswitch
+LoadPlugin cpu
+#LoadPlugin cpufreq
+#LoadPlugin cpusleep
+#LoadPlugin csv
+```
+Restart `collectd` service.
+
+```bash
+service collectd restart
+```
+
+#####  Install Collectd-Web and Dependencies
+
+```bash
+apt install  librrds-perl libjson-perl libhtml-parser-perl libcgi-pm-perl git
+```
+```bash
+cd /usr/local/
+git clone https://github.com/httpdss/collectd-web.git
+```
+Go to directory and change:
+
+```bash
+cd collectd-web/
+ls
+chmod +x cgi-bin/graphdefs.cgi
+```
+Collectd-web standalone Python server script is configured by default to run and bind only on loopback address (127.0.0.1).
+You need to edit the runserver.py script and change the 127.0.1.1 IP Address to 0.0.0.0, in order to bind on all network interfaces IP Addresses.
+
+```bash
+vim runserver.py
+```
+```bash
+python runserver.py &
+```
+If you dont have python package you can install it with:
+
+```bash
+apt install python
+```
+To visit Collectd-web interface and display statistics about your host, open a browser and point the URL at your server IP Address and port 8888 using HTTP protocol.
 
 
 
+source:
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+https://www.tecmint.com/install-collectd-and-collectd-web-to-monitor-server-resources-in-linux/
+https://zoomadmin.com/HowToInstall/UbuntuPackage/libcgi-pm-perl
+https://www.linux.com/training-tutorials/installation-guide-collectd-and-collectd-web-monitor-server-resources-linux/
+https://www.linuxsysadmins.com/install-collectd-monitoring-on-linux/
