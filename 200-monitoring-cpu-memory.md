@@ -635,6 +635,12 @@ root@ubuntu-srv:~#  tree /var/lib/collectd/rrd
 29 directories, 183 files
 ```
 
+Install netdata
+
+```bash
+wget -O /tmp/netdata-kickstart.sh https://my-netdata.io/kickstart.sh && sh /tmp/netdata-kickstart.sh
+```
+
 Okey do not forget that the installation process is not part of LPIC exam and based on your distribution and version the installation steps might be different from what we have done here
 
 
