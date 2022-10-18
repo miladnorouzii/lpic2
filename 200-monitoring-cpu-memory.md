@@ -635,6 +635,14 @@ root@ubuntu-srv:~#  tree /var/lib/collectd/rrd
 29 directories, 183 files
 ```
 
+Install netdata
+
+```bash
+wget -O /tmp/netdata-kickstart.sh https://my-netdata.io/kickstart.sh && sh /tmp/netdata-kickstart.sh
+```
+
+To visit netdata interface and display statistics about your host, open a browser and point the URL at your server IP Address and port 19999 using HTTP protocol.
+
 Okey do not forget that the installation process is not part of LPIC exam and based on your distribution and version the installation steps might be different from what we have done here
 
 
