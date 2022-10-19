@@ -128,7 +128,7 @@ to confirm what has been done:
 [root@MiWiFi-R4AC-srv ~]# ls /lib/modules
 ```
 
-# Make install
+### Make install
 make install write required files into the /boot and modified grub and set everything for us
 
 ```bash
@@ -140,4 +140,40 @@ and reboot and enjoy your new kernel!
 ```bash
 [root@MiWiFi-R4AC-srv linux]# uname -r
 ```
+
+### Setting the Default Kernel in the Bootloader
+
+Now that the configuration is rebuilt and the menu is flattened, we can parse the file for the available entries. The following command displays the entry index number and title. You can use either of these to refer to a specific entry.
+
+```bash
+sudo grep 'menuentry ' /boot/grub2/grun.cfg | cut -f 2 -d "'" | nl -v 0
+```
+
+This returns all of your available boot options. Take a note of the index number or title of the entry you wish to boot.
+
+```bash
+0	CentOS Linux (3.10.0-327.22.2.el7.x86_64) 7 (Core)
+1	CentOS Linux (3.10.0-327.18.2.el7.x86_64) 7 (Core)
+2	CentOS Linux (0-rescue-d4c27651599f460481bc723aafe36177) 7 (Core)
+3	CentOS Linux (0-rescue-ce700ac27e6f4161b0730bad2182e0b1) 7 (Core)
+```
+
+For CentOS and Fedora Droplets, use grub2-set-default. For example, by entry title:
+
+```bash
+sudo grub2-set-default 'CentOS Linux (3.10.0-327.18.2.el7.x86_64) 7 (Core)'
+```
+
+For CentOS and Fedora, use grub2-reboot:
+
+```bash
+sudo grub2-reboot 'CentOS Linux (3.10.0-327.18.2.el7.x86_64) 7 (Core)'
+```
+
+Once you’ve selected the kernel to use, reboot the Droplet.
+
+```bash
+sudo reboot
+```
+
 
