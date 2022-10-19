@@ -35,6 +35,17 @@ For install modules use `modprobe`. before using `modeprobe` run `depmod -a`
 depmod -a
 modprobe -r video --> for remove modules
 modprobe video --> for install modules
+
+lsmod | grep parport
+
+modprobe -r parport
+
+error madule in use 
+modprobe -r ppdev
+modprobe -r parport_pc
+
+morprobe -r parport
+modprobe parport
 ```
 
 ```bash
