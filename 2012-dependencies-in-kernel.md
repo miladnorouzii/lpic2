@@ -80,6 +80,10 @@ dmesg --> running log of system device
 udevadm monitor --> real time monitoring of kernel modules
 
 ```
+### sysctl
+We discussed that by manipulating /proc/sys/kernel we can change some current running kernel parameters. But as we said these settings are not permanent and they all gone after reboot. sysctl lets us make permanent settings.
+sysctl -a to show all tuneables.
+`root@server1:~# sysctl -a | wc`
 
 To see curennt kernel module run:
 
@@ -109,6 +113,7 @@ vm.watermark_scale_factor = 10
 vm.zone_reclaim_mode = 0
 
 ```
+that is a large file you can see.To set a new value to a parameter use sysctl -w :
 
 You can change kernel modules values with: (not permanent)
 
@@ -116,6 +121,43 @@ You can change kernel modules values with: (not permanent)
 sudo sysctl -w vm.zone_reclaim_mode=1
 
 vm.zone_reclaim_mode = 1
+```
+as you can see includes /etc/sysctl.d/ directory setting files but don't for get that setting in sysctl.conf file always over write /etc/sysctl.d/ directory and Win :) You can uncomment or add setting weather in sysctl.conf or go and create custom file in /etc/sysctl.d/ directory but Take care of contrasts.
+
+### udev
+During boot process when kernel is loaded and Device Driver start setting up hardware, next step of hardware initializing is udev. So kernel initial device loading and send uevents to udev daemon. udev keep these event and handle them base on attributes it has received in the event.
+
+### udevadm monitor , udevadm
+udev has a monitoring tool, and it monitor and shows event received from the kernel after hardware initializing and uevent which are udev events after processing udev rules, lets attach a usb and monitor what it shows:
+
+```bash
+root@server1:~# udevadm monitor 
+monitor will print the received events for:
+UDEV - the event which udev sends out after rule processing
+KERNEL - the kernel uevent
+
+KERNEL[3520.586975] add      /devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1 (usb)
+KERNEL[3520.589831] add      /devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1/1-1:1.0 (usb)
+UDEV  [3520.610064] add      /devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1 (usb)
+KERNEL[3520.653543] add      /module/usb_storage (module)
+```
+You can see both kernel messages and udev events. And finally our usb flash is mounted as sdb. For having more readable data:
+
+```bash
+root@server1:~# udevadm info --query=all --name=/dev/sdb
+P: /devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1/1-1:1.0/host33/target33:0:0/33:0:0:0/block/sdb
+N: sdb
+S: disk/by-id/usb-Kingston_DT_101_II_0013729982D5B97196320049-0:0
+S: disk/by-label/MYLINUXLIVE
+S: disk/by-path/pci-0000:02:03.0-usb-0:1:1.0-scsi-0:0:0:0
+S: disk/by-uuid/3879-A38A
+E: DEVLINKS=/dev/disk/by-uuid/3879-A38A /dev/disk/by-label/MYLINUXLIVE /dev/disk/by-id/usb-Kingston_DT_101_II_0013729982D5B97196320049-0:0 /dev/disk/by-path/pci-0000:02:03.0-usb-0:1:1.0-scsi-0:0:0:0
+E: DEVNAME=/dev/sdb
+```
+use udevadm info attribute-walk --name=/dev/sdb | less to have summary of device attributes:
+
+```bash
+root@server1:~# udevadm info --attribute-walk --name=/dev/sdb
 ```
 
 For use `lsdev` first install `procinfo` package.
