@@ -167,5 +167,7 @@ sudo apt install procinfo
 lsdev
 ```
 
+### dmesg
 
+In LPIC1 Course we discussed that during boot process (when operating system hasn't been started yet) dmesg logs kernel ring buffer. Let go deeper, during the boot process kernel is loaded into RAM. At this stage there is a Device Driver presents in kernel which set up to drive relevant hardware. As any other elements of kernel, device driver produce messages. These messages have information about modules presents and value of any parameters. As booting process is so fast, dmesg help us to review what has happened during boot process.
 
