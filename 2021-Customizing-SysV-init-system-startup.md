@@ -337,8 +337,7 @@ reload a service by reading its conf file,[might not work]|
 stop and start a service |
 |systemctl list-unit-files --type=service |same as chkconf --list but in systemd environment |
 |systemctl daemon-reload |Reload systemd Daemon, used after unit files modification |
-|systemctl list-depencencies |
-List targets and services dependencies |
+|systemctl list-depencencies |List targets and services dependencies |
 
 ### For the History:
 
