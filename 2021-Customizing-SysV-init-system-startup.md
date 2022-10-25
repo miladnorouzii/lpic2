@@ -348,6 +348,4 @@ List targets and services dependencies |
 
 |Distro |2007 |2011-2020 |2014-???? |
 |---|---|---|---|
-|centOS |
-SysV (centOS 5 |
-Upstart (centOS6)|Systemd |
+|centOS |SysV (centOS 5 |Upstart (centOS6)|systemd (centOS 7) |
