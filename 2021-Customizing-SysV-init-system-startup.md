@@ -326,15 +326,11 @@ systemctl is systemd magic command to work with services:
 | systemctl useful commands | description |
 | ----------- | ----------- |
 |systemctl start <ServiceName> |to start a service |
-|systemctl stop <ServiceName> |
-to stop service |
-|systemctl disable <ServiceName> |
-disable it, won't be activated even after reboot |
+|systemctl stop <ServiceName> |to stop service |
+|systemctl disable <ServiceName> |disable it, won't be activated even after reboot |
 |systemctl enable <ServiceName> |enable a service |
-|systemctl relaod <ServiceName> |
-reload a service by reading its conf file,[might not work]|
-|systemctl restart <ServiceName> |
-stop and start a service |
+|systemctl relaod <ServiceName> |reload a service by reading its conf file,[might not work]|
+|systemctl restart <ServiceName> |stop and start a service |
 |systemctl list-unit-files --type=service |same as chkconf --list but in systemd environment |
 |systemctl daemon-reload |Reload systemd Daemon, used after unit files modification |
 |systemctl list-depencencies |List targets and services dependencies |
