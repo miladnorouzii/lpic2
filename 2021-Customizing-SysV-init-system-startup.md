@@ -146,11 +146,9 @@ to change see some usefull examples:
 | command  | description |
 | ----------- | ----------- |
 |chkconfig <service name> on |start service on any unspecial run level(3,4,5 centOS) |
-|chkconfig <service name> off |
-turn service off in all runlevels |
+|chkconfig <service name> off |turn service off in all runlevels |
 |chkconfig  --list <service name> |List service condition in all unlevels |
-|chkconfig --level  345 <service name> on/off |
-Turn serve on/off in runlevel 3,4 and 5 |
+|chkconfig --level  345 <service name> on/off |Turn serve on/off in runlevel 3,4 and 5 |
 
 ### update-rc.d
 in Debian based systems like ubuntu update-rc.d used as a command instead of chkconfig command
