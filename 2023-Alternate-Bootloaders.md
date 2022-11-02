@@ -142,4 +142,71 @@ label Ubuntu
       append root=/dev/sda1 initrd=/boot/initrd.img-4.10.0-28-generic
 ```
 
+### isolinux
 
+```bash
+root@server1:~# wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz
+root@server1:~# tar -xvf syslinux-6.03.tar.gz 
+root@server1:~# ls -l
+total 11404
+drwxrwxr-x 33 1026 1026     4096 Oct  6  2014 syslinux-6.03
+-rw-r--r--  1 root root 11671940 Oct  6  2014 syslinux-6.03.tar.gz
+root@server1:~# mkdir cdroot
+
+root@server1:~# cp syslinux-6.03/bios/core/isolinux.bin cdroot/
+
+root@server1:~# cp syslinux-6.03/bios/com32/elflink/ldlinux/ldlinux.c32 cdroot/
+
+root@server1:~# cp syslinux-6.03/bios/com32/lib/libcom32.c32 cdroot/
+root@server1:~# cp syslinux-6.03/bios/com32/libutil/libutil.c32 cdroot/
+root@server1:~# cp syslinux-6.03/bios/com32/menu/vesamenu.c32 cdroot/
+
+root@server1:~# cp /boot/vmlinuz-4.10.0-28-generic cdroot/vmlinuz
+root@server1:~# cp /boot/initrd.img-4.10.0-28-generic  cdroot/initrd
+```
+
+now create isolinux.cfg file insode cdroot/ directory :
+
+```bash
+PROMPT 0
+TIMEOUT 100
+UI vesamenu.c32
+MENU TITLE isolinux bootloader menu
+label Ubuntu
+ menu label Ubuntu 16.04.3 
+    kernel vmlinuz
+    append initrd=initrd root=/dev/sda1
+```
+Lets create bootable media from folder that we have made:
+
+```bash
+root@server1:~# cp syslinux-6.03/bios/core/isolinux.bin .
+root@server1:~# mkisofs -o bootcd.iso -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf8 cdroot
+Size of boot image is 4 sectors -> No emulation
+ 20.58% done, estimate finish Sun Dec 24 00:31:31 2017
+ 41.09% done, estimate finish Sun Dec 24 00:31:33 2017
+ 61.66% done, estimate finish Sun Dec 24 00:31:32 2017
+ 82.17% done, estimate finish Sun Dec 24 00:31:32 2017
+Total translation table size: 2048
+Total rockridge attributes bytes: 0
+Total directory bytes: 0
+Path table size(bytes): 10
+Max brk space used 0
+24339 extents written (47 MB)
+```
+
+and lets boot the system with bootcd.iso :
+
+you can see that the system will be booted up using initrd and vmlinuz that we have put in CD and then follow next required steps from hard disk.
+
+
+
+
+### PXELINUX
+Up to now we have booted up our system with Hard Disk, USB drive and CD/DVD ROM. The last topic here is booting up your system trough the network. Pixie or Pre Execution Environment is a name which is called to this environment. It describe standardize client-server environment at which client has a pxe-support network interface and its able to boot up from the network. Obviously client cant be alone in this environment and we need DHCP, TFTP and nfs servers.
+
+How dose it work ?
+
+![pxelinux](./pic/pxelinux.jpg)
+
+When Client boots up it starts asking for an ip address, DHCP server receives its requests and as our client is pxe-support, DHCP gives it an IP Address and the IP address of TFTP server and required files. Now taht client has an IP address goes for TFTP server and download boot loader and the kernel stuff form TFTP server. Kernel and its modules are downloaded by the client trough the network and they are loaded into RAM. And part of kernel loading process it Tries to mount root partition by mounting it from a NFS server. and system boots up .
