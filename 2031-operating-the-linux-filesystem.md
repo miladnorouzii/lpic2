@@ -213,3 +213,367 @@ sda      8:0    0   50G  0 disk
 ├─sda5   8:5    0 1021M  0 part [SWAP]
 └─sda1   8:1    0   49G  0 part /
 ```
+
+as an example lets add a new 10GB hard disk :
+
+```bash
+root@server2:~# ls /dev | grep sd
+sda
+sda1
+sda2
+sda5
+sdb
+root@server2:~# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdb      8:16   0   10G  0 disk 
+sr0     11:0    1 1024M  0 rom  
+sda      8:0    0   50G  0 disk 
+├─sda2   8:2    0    1K  0 part 
+├─sda5   8:5    0 1021M  0 part [SWAP]
+└─sda1   8:1    0   49G  0 part /
+root@server2:~# fdisk /dev/sdb 
+
+Welcome to fdisk (util-linux 2.27.1).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0x21fcd674.
+
+Command (m for help): n
+Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-20971519, default 2048): 
+Last sector, +sectors or +size{K,M,G,T,P} (2048-20971519, default 20971519): 
+
+Created a new partition 1 of type 'Linux' and of size 10 GiB.
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+root@server2:~# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdb      8:16   0   10G  0 disk 
+└─sdb1   8:17   0   10G  0 part 
+sr0     11:0    1 1024M  0 rom  
+sda      8:0    0   50G  0 disk 
+├─sda2   8:2    0    1K  0 part 
+├─sda5   8:5    0 1021M  0 part [SWAP]
+└─sda1   8:1    0   49G  0 part /
+
+root@server2:~# mkfs.ext
+mkfs.ext2     mkfs.ext3     mkfs.ext4     mkfs.ext4dev  
+root@server2:~# mkfs.ext4 /dev/sdb1
+mke2fs 1.42.13 (17-May-2015)
+Creating filesystem with 2621184 4k blocks and 655360 inodes
+Filesystem UUID: a3be5874-890b-46a6-b4e5-a3f88998ad91
+Superblock backups stored on blocks: 
+    32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (32768 blocks): done
+Writing superblocks and filesystem accounting information: done
+```
+
+Now lets mount /dev/sdb1 on a mount point to use it:
+
+```bash
+root@server2:~# mkdir /mnt/my10ghdd
+root@server2:~# mount -t ext4 /dev/sdb1 /mnt/my10ghdd/
+
+root@server2:~# touch /mnt/my10ghdd/{myfile1,myfile2,myfile3}
+root@server2:~# ls /mnt/my10ghdd/
+lost+found  myfile1  myfile2  myfile3
+```
+
+-t means what type of file system is going to be mounted, /dev/sdb1 is mount device and /mnt/my10ghdd is mount point.
+
+
+|mount command switches|Description|
+|---|---|
+|mount -V|Output version|
+|mount -v|Verbose mode|
+|mount -h|Prints help message|
+|mount -a|mount all file systems mentioned in /etc/fstab file|
+|mount -n /dev/sda7 /mnt/newpartition|	mounting without writing in /etc/mtab file|
+|mount -t <File System Type> /dev/sda7 /mnt/newpartition|indicates the File System ext2, ext3, ext4, iso9660, ntfs, swap, auto|
+|mount -o <options> /dev/sda7 /mnt/newpartition|ro, rw, exec/noexec, suid/nosuid, dev/nodev, sync/async, user/users|
+
+Before exploring mount command options lets talk about sync/async concept:
+
+### sync/async
+
+As spped difference between CPU and Hard Disk or other lazy devices, RAM are used. But Still there is a gap and latency between RAM and 3rd storage media. The solutions for omitting this speed gap are caches and buffers. Imagine CPU wants to write some thing on a poor floppy Disk. The data can be first stored in RAM and CPU can invest its valuable time on other things and than Data is writed down on floppy disk from ram.This is what logic accepts and usually happens, which is called "async". In opposite to "async" we have "sync" option which writes down dataat the same time on the floppy, and obviously take more time.
+
+### mount command options:
+
+|mount option|Description|
+|---|---|
+|ro|read-only|
+|rw|read-write|
+|exec/noexec|Permit/Prevent execution of binaries|
+|suid/nosuid|Permit/Block the operation of suid, guid bits|
+|dev/nodev|Interpret/Do not interpret character or block special devices on the file system|
+|sync/async|I/O to the file system is done (a)synchronously|
+|defaults|Use default options: rw, suid, dev, exec, auto, nouser, and async|
+|remount|Attempt to remount an already-mounted file system, usually used to change mount options|
+
+### /etc/mtab (contraction of mounted file systems table)
+
+mtab is a file which is kept update with the mount subsystem.It lists currently mounted file system, how ever kernel doesn't do any thing with the mtab file. kernel puts its settings in /proc/mounts and /proc/self/mounts.
+
+```bash
+root@server2:~# ls /dev | grep sd
+sda
+sda1
+sda2
+sda5
+root@server2:~# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sr0     11:0    1 1024M  0 rom  
+sda      8:0    0   50G  0 disk 
+├─sda2   8:2    0    1K  0 part 
+├─sda5   8:5    0 1021M  0 part [SWAP]
+└─sda1   8:1    0   49G  0 part /
+```
+as an example lets add a new 10GB hard disk :
+
+```bash
+root@server2:~# ls /dev | grep sd
+sda
+sda1
+sda2
+sda5
+sdb
+root@server2:~# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdb      8:16   0   10G  0 disk 
+sr0     11:0    1 1024M  0 rom  
+sda      8:0    0   50G  0 disk 
+├─sda2   8:2    0    1K  0 part 
+├─sda5   8:5    0 1021M  0 part [SWAP]
+└─sda1   8:1    0   49G  0 part /
+root@server2:~# fdisk /dev/sdb 
+
+Welcome to fdisk (util-linux 2.27.1).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0x21fcd674.
+
+Command (m for help): n
+Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-20971519, default 2048): 
+Last sector, +sectors or +size{K,M,G,T,P} (2048-20971519, default 20971519): 
+
+Created a new partition 1 of type 'Linux' and of size 10 GiB.
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+root@server2:~# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdb      8:16   0   10G  0 disk 
+└─sdb1   8:17   0   10G  0 part 
+sr0     11:0    1 1024M  0 rom  
+sda      8:0    0   50G  0 disk 
+├─sda2   8:2    0    1K  0 part 
+├─sda5   8:5    0 1021M  0 part [SWAP]
+└─sda1   8:1    0   49G  0 part /
+
+root@server2:~# mkfs.ext
+mkfs.ext2     mkfs.ext3     mkfs.ext4     mkfs.ext4dev  
+root@server2:~# mkfs.ext4 /dev/sdb1
+mke2fs 1.42.13 (17-May-2015)
+Creating filesystem with 2621184 4k blocks and 655360 inodes
+Filesystem UUID: a3be5874-890b-46a6-b4e5-a3f88998ad91
+Superblock backups stored on blocks: 
+    32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (32768 blocks): done
+Writing superblocks and filesystem accounting information: done
+```
+Now lets mount /dev/sdb1 on a mount point to use it:
+
+```bash
+root@server2:~# mkdir /mnt/my10ghdd
+root@server2:~# mount -t ext4 /dev/sdb1 /mnt/my10ghdd/
+
+root@server2:~# touch /mnt/my10ghdd/{myfile1,myfile2,myfile3}
+root@server2:~# ls /mnt/my10ghdd/
+lost+found  myfile1  myfile2  myfile3
+```
+
+-t means what type of file system is going to be mounted, /dev/sdb1 is mount device and /mnt/my10ghdd is mount point.
+
+| mount command switches                                   | Description                                                            |
+| -------------------------------------------------------- | ---------------------------------------------------------------------- |
+| mount -V                                                 | Output version                                                         |
+| mount -v                                                 | Verbose mode                                                           |
+| mount -h                                                 | Prints help message                                                    |
+| mount -a                                                 | mount all file systems mentioned in /etc/fstab file                    |
+| mount -n /dev/sda7 /mnt/newpartition                     | mounting without writing in /etc/mtab file                             |
+| mount -t \<File System Type> /dev/sda7 /mnt/newpartition | indicates the File System ext2, ext3, ext4, iso9660,  ntfs, swap, auto |
+| mount -o \<options> /dev/sda7 /mnt/newpartition          | ro, rw, exec/noexec, suid/nosuid, dev/nodev, sync/async, user/users    |
+
+
+Before exploring mount command options lets talk about sync/async concept:
+
+### sync/async
+
+As spped difference between CPU and Hard Disk or other lazy devices, RAM are used. But Still there is a gap and latency between RAM and 3rd storage media. The solutions for omitting this speed gap are caches and buffers. Imagine CPU wants to write some thing on a poor floppy Disk. The data can be first stored in RAM and CPU can invest its valuable time on other things and than Data is writed down on floppy disk from ram.This is what logic accepts and usually happens, which is called "async". In opposite to "async" we have "sync" option which writes down dataat the same time on the floppy, and obviously take more time.
+
+### mount command options:
+
+| mount option | Description                                                                             |
+| ------------ | --------------------------------------------------------------------------------------- |
+| ro           | read-only                                                                               |
+| rw           | read-write                                                                              |
+| exec/noexec  | Permit/Prevent execution of binaries                                                    |
+| suid/nosuid  | Permit/Block the operation of suid, guid bits                                           |
+| dev/nodev    | Interpret/Do not interpret character or block special devices on the file system        |
+| sync/async   | I/O to the file system is done (a)synchronously                                         |
+| defaults     | Use default options: rw, suid, dev, exec, auto, nouser, and async                       |
+| remount      | Attempt to remount an already-mounted file system, usually used to change mount options |
+
+### /etc/mtab (contraction of mounted file systems table)
+
+mtab is a file which is kept update with the mount subsystem.It lists currently mounted file system, how ever kernel doesn't do any thing with the mtab file. kernel puts its settings in /proc/mounts and /proc/self/mounts.
+
+
+### /etc/mtab (contraction of mounted file systems table)
+
+mtab is a file which is kept update with the mount subsystem.It lists currently mounted file system, how ever kernel doesn't do any thing with the mtab file. kernel puts its settings in /proc/mounts and /proc/self/mounts.
+
+```
+root@server1:~# cat /etc/mtab 
+sysfs /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0
+proc /proc proc rw,nosuid,nodev,noexec,relatime 0 0
+udev /dev devtmpfs rw,nosuid,relatime,size=475204k,nr_inodes=118801,mode=755 0 0
+devpts /dev/pts devpts rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000 0 0
+tmpfs /run tmpfs rw,nosuid,noexec,relatime,size=99492k,mode=755 0 0
+/dev/sda1 / ext4 rw,relatime,errors=remount-ro,data=ordered 0 0
+securityfs /sys/kernel/security securityfs rw,nosuid,nodev,noexec,relatime 0 0
+tmpfs /dev/shm tmpfs rw,nosuid,nodev 0 0
+tmpfs /run/lock tmpfs rw,nosuid,nodev,noexec,relatime,size=5120k 0 0
+tmpfs /sys/fs/cgroup tmpfs ro,nosuid,nodev,noexec,mode=755 0 0
+```
+
+When we type mount the content of mtab file is shown:
+
+```
+root@server1:~# mount
+sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+udev on /dev type devtmpfs (rw,nosuid,relatime,size=475204k,nr_inodes=118801,mode=755)
+devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000)
+tmpfs on /run type tmpfs (rw,nosuid,noexec,relatime,size=99492k,mode=755)
+/dev/sda1 on / type ext4 (rw,relatime,errors=remount-ro,data=ordered)
+securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)
+tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev)
+```
+
+They are the same, as mtab list includes some dynamically mounted system objects it shouldn't be edited by the Administrators.
+
+### /etc/fstab (file systems table)
+
+Every thing seems right but our mounted devices are not persistent and wouldn't be accessible after reboot so far.To make a persistent mount we should use fstab. fstab is very similar to mtab but they are not related. fstab is more easier to edit:
+
+```
+root@server1:~# cat /etc/fstab 
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda1 during installation
+UUID=142a64e5-96f3-4789-9c91-1dc1570057b7 /               ext4    errors=remount-ro 0       1
+# swap was on /dev/sda5 during installation
+UUID=b4801c8b-ca75-4548-8697-182d1b6d895c none            swap    sw              0       0
+/dev/fd0        /media/floppy0  auto    rw,user,noauto,exec,utf8 0       0
+# for making permanent swap on /dev/sdb1
+UUID="b4801c8b-ca75-4548-8697-182d1b6d895c" none    swap    sw    0 0
+```
+
+Desciption:
+| Item           | Example                     | Description                                                          |
+| -------------- | --------------------------- | -------------------------------------------------------------------- |
+| \<file system> | /dev/floppy0 or UUID        | Device/partion that contains file system                             |
+| \<mount point> | /media/floppy               | Where do we wana mount device/partition                              |
+| \<type>        | ext4                        | Type of File system                                                  |
+| \<option>      | rw, user, noauto, exec, ... | mount options of accessing device/partition                          |
+| \<dump>        | 0 or 1                      | enable/disbale backing up device/pertition                           |
+| \<pass>        | 0 or 1 or 2                 | Control the order of fsck check partition/device during boot process |
+
+Lets take a look at fstab mount options:
+
+### fstab mount options:
+
+Obviously fstab mount options and mount command options are the same but there some options which are meaning full if we are talking about fstab configuration:
+
+| mount option | Description                                                                                                                                                                                                                                                                                  |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| user         | Allow an ordinary user to mount the file system. The name of the mounting user is written to mtab so that he can unmount the file system again.This option Implies the options noexec, nosuid, and nodev (unless overridden by subsequent options, as in the option line user,exec,dev,suid) |
+| users        | Allow every user to mount and unmount the file system. Implies the options noexec, nosuid, and nodev (unless overridden by subsequent options, as in the option line users,exec,dev,suid).                                                                                                   |
+| nouser       | Forbin an ordinary user to mount the File System, this is the default                                                                                                                                                                                                                        |
+| auto         | File System can be mounted Automatically after boot . using mount -a option also mount Device/partition if it is not mounted                                                                                                                                                                 |
+| noauto       | The File System will NOT be automatically mounted after reboot, mount -a wouldn't considering this Device/Partition.You must explicitly mount the filesystem.                                                                                                                                |
+| \_netdev     | filesystem resides on a device that requires network access (used to prevent the system from attempting to mount these filesystems until the network has been enabled on the system)                                                                                                         |
+
+### blkid
+
+blkid show all information of block devices in our system,
+
+```
+/dev/sda1: UUID="142a64e5-96f3-4789-9c91-1dc1570057b7" TYPE="ext4" PARTUUID="101c66bb-01"
+/dev/sda5: UUID="b4801c8b-ca75-4548-8697-182d1b6d895c" TYPE="swap" PARTUUID="101c66bb-05"
+/dev/sdb1: UUID="6a1c543e-3224-4cfb-82ba-d802051c4b76" TYPE="swap" PARTUUID="1f54816e-01"
+```
+
+in fstab we can use UUID (Universally Unique Identifier) instead of Device abstract name from /dev/ directory. This way we reduce the mount fails because HAL might change the name as time passes and other Disks are installed.
+
+And Finnally lets go back and make the swap partition permanent by editing fstab file :
+
+```
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda1 during installation
+UUID=142a64e5-96f3-4789-9c91-1dc1570057b7 /               ext4    errors=remount-ro 0       1
+# swap was on /dev/sda5 during installation
+UUID=b4801c8b-ca75-4548-8697-182d1b6d895c none            swap    sw              0       0
+/dev/fd0        /media/floppy0  auto    rw,user,noauto,exec,utf8 0       0
+# for making permanent swap on /dev/sdb1
+UUID="b4801c8b-ca75-4548-8697-182d1b6d895c" none        swap    sw      0 0
+```
+
+and another way to see UUID of devices is:
+
+```
+root@server1:/# ls -l /dev/disk/by-uuid/
+total 0
+lrwxrwxrwx 1 root root 10 Dec 26 22:17 142a64e5-96f3-4789-9c91-1dc1570057b7 -> ../../sda1
+lrwxrwxrwx 1 root root 10 Dec 26 22:17 6a1c543e-3224-4cfb-82ba-d802051c4b76 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Dec 26 22:17 b4801c8b-ca75-4548-8697-182d1b6d895c -> ../../sda5
+```
