@@ -480,6 +480,8 @@ dd if=/dev/zero of=/dev/sdb1 bs=1 count=10 seek=10000
 
 fsck -b 555555 /dev/sdb1
 
+dumpe2fs /dev/sdb1 | grep -i superblock
+
 mkfs.ext4 -n /dev/sdb1  -->  For find superblock
 
 fsck -b 819200 /dev/sdb1
