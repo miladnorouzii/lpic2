@@ -381,6 +381,7 @@ lua-curl-dev/xenial 0.3.0-9 amd64
   libcURL development files for the Lua language
 
 root@server1:~/cpuminer/cpuminer-2.5.0# apt install libcurl4-openssl-dev
+root@server1:~/cpuminer/cpuminer-2.5.0# apt install build-essential
 ```
 
 Now run configure again and watch for any problems:
