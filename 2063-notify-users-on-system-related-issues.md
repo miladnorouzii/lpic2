@@ -45,6 +45,13 @@ How about other users users who access our server via ssh?
 
 One of the ways to protect and secure SSH logins is by displaying warming message to UN-authorized users or display welcome or informational messages to authorized users.
 
+Install figlet :)
+
+```
+milad@2004:~$ sudo apt install figlet
+
+figlet -c "LPIC2 Issue.net"
+
 ```
                                                                  #####
                                                                 #######
