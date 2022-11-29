@@ -52,6 +52,8 @@ milad@2004:~$ sudo apt install figlet
 figlet -c "LPIC2 Issue.net"
 
 ```
+
+```
                                                                  #####
                                                                 #######
                    @                                            ##O#O##
