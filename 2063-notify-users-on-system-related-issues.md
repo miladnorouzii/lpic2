@@ -1,5 +1,4 @@
-
-    This lesson is all about the ways we can notifying other users. An unplanned hardware maintenance might be required, system might need to be rebooted, new kernel has been compiled , ...
+This lesson is all about the ways we can notifying other users. An unplanned hardware maintenance might be required, system might need to be rebooted, new kernel has been compiled , ...
 
 There are some active and passive ways in linux, to notify other users. By considering this fact that some users might be logged off the story is made more complicated. Lets start with the simplest command.
 
@@ -44,6 +43,15 @@ How about other users users who access our server via ssh?
 #### shh login banner message
 
 One of the ways to protect and secure SSH logins is by displaying warming message to UN-authorized users or display welcome or informational messages to authorized users.
+
+Install figlet :)
+
+```
+milad@2004:~$ sudo apt install figlet
+
+figlet -c "LPIC2 Issue.net"
+
+```
 
 ```
                                                                  #####
