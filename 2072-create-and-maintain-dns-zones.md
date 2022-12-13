@@ -389,6 +389,10 @@ It's also possible to create updates manually with the command-line program nsup
 With that, Lets create forward and reverse zones for imaginary zone, named "myzone":
 
 ```
+vim named.conf.local
+```
+
+```
 //
 // Do any local configuration here
 //
