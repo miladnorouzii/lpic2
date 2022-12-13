@@ -317,7 +317,7 @@ and result:
 
 ```
 root@server2:/home# ls
-mydirectory  payam
+mydirectory  USER1
 ```
 
 And visa versa, Copy/Sync a Remote Directory to a Local Machine:
@@ -347,7 +347,7 @@ systemd-private-5c9b83ef1a904073864354a680e17c01-rtkit-daemon.service-wp0M3z
 systemd-private-5c9b83ef1a904073864354a680e17c01-systemd-timesyncd.service-fh7T2M
 unity_support_test.0
 VMwareDnD
-vmware-payam
+vmware-USER1
 vmware-root
 ```
 

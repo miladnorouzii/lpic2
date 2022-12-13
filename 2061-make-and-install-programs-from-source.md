@@ -471,7 +471,7 @@ it seems every thing is okey, and it generates some file for compiling :
 ```
 -rwxr-xr-x 1 root  root   35K Feb  4 04:08 config.status
 -rw-r--r-- 1 root  root   52K Feb  4 04:08 Makefile
-drwxr-xr-x 3 payam payam 4.0K Feb  4 04:08 compat
+drwxr-xr-x 3 USER1 USER1 4.0K Feb  4 04:08 compat
 -rw-r--r-- 1 root  root  5.3K Feb  4 04:08 cpuminer-config.h
 -rw-r--r-- 1 root  root    32 Feb  4 04:08 stamp-h1
 -rw-r--r-- 1 root  root   33K Feb  4 04:08 config.log

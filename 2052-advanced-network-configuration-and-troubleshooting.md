@@ -212,7 +212,7 @@ systemd      1                  root  mem       REG                8,1   252152 
 | lsof  /var/log/syslog   | Shows which processes have opened specific file            |
 | lsof +D /var/log        | List opened files under a Directory                        |
 | lsof /home              | List processes using a mount point                         |
-| lsof -u payam           | List files opened by a specific user                       |
+| lsof -u USER1           | List files opened by a specific user                       |
 | lsof -p 1357            | all open files by specific process                         |
 | lsof -c ssh             | List opened files based on process names starting with ... |
 | lsof -t /var/log/syslog | list process id of a process which opened /var/log/syslog  |
@@ -307,7 +307,7 @@ send text stream from server2 to server1:
 ```
 root@server2:~$ su 
 Password: 
-root@server2:/home/payam# su -
+root@server2:/home/USER1# su -
 root@server2:~# nc 192.168.10.152 80
 Hello!
 I'm here to send some messages over port 80

@@ -37,7 +37,7 @@ root@server1:~# lsblk
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sdb      8:16   1  7.5G  0 disk 
 └─sdb1   8:17   1  7.5G  0 part /media/myflash
-sr0     11:0    1  1.5G  0 rom  /media/payam/Ubuntu 16.04.3 LTS amd64
+sr0     11:0    1  1.5G  0 rom  /media/USER1/Ubuntu 16.04.3 LTS amd64
 fd0      2:0    1    4K  0 disk 
 sda      8:0    0   50G  0 disk 
 ├─sda2   8:2    0    1K  0 part 
