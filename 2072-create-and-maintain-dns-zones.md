@@ -469,6 +469,7 @@ $TTL    604800
              604800 )    ; Negative Cache TTL
 ;
 @    IN    NS    ns.myzone.
+ns   IN   A     192.168.10.129
 @    IN    A    192.168.10.129
 host2    IN    A    192.168.10.151
 ```
