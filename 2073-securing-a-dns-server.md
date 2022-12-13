@@ -319,7 +319,7 @@ root@server1:/etc/bind# vim named.conf.tsig
 root@server1:/etc/bind# cat named.conf.tsig 
 key "mykey" {
     algorithm HMAC-MD5;
-    secret "b5aPd9u//WDzXeZIfF7vQw=="
+    secret "b5aPd9u//WDzXeZIfF7vQw==" ;
     };
 ```
 
