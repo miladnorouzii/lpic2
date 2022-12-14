@@ -291,7 +291,10 @@ On master server:
 root@server1:~# cd /etc/bind
 root@server1:/etc/bind# mkdir mykeys
 root@server1:/etc/bind# cd mykeys/
-root@server1:/etc/bind/mykeys# dnssec-keygen -a HMAC-MD5 -b 128 -n HOST -r /dev/urandom mykey
+
+################# in ubuntu 20.04 run -->  tsig-keygen -a HMAC-MD5 mykey > mykey
+
+root@server1:/etc/bind/mykeys# dnssec-keygen -a HMAC-MD5 -b 128 -n HOST -r /dev/urandom mykey --> ubuntu16.04
 Kmykey.+157+08981
 root@server1:/etc/bind/mykeys# ls -l
 total 8
