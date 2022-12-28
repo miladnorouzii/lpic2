@@ -389,6 +389,10 @@ It's also possible to create updates manually with the command-line program nsup
 With that, Lets create forward and reverse zones for imaginary zone, named "myzone":
 
 ```
+vim named.conf.local
+```
+
+```
 //
 // Do any local configuration here
 //
@@ -465,6 +469,7 @@ $TTL    604800
              604800 )    ; Negative Cache TTL
 ;
 @    IN    NS    ns.myzone.
+ns   IN   A     192.168.10.129
 @    IN    A    192.168.10.129
 host2    IN    A    192.168.10.151
 ```
