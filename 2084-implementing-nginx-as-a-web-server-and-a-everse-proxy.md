@@ -561,13 +561,13 @@ root@server1:/etc/nginx/sites-available# vim example.com
 root@server1:/etc/nginx/sites-available# cat example.com 
 server {
     listen 80;
-    server_name example.com;
+    server_name milad.local;
 
-    location \ {
-        proxy_pass http://lxer.com/;
-        include /etc/nginx/proxy_params;
+    location / {
+        proxy_pass https://www.yahoo.com;
         }
     }
+
 ```
 
 Now lets make it enable and restart the nginx service:
