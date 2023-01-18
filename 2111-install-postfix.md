@@ -1,6 +1,11 @@
 ```
 apt install postfix mailutils
 ```
+If you get a error code 1 run
+```
+sudo apt-get install -f
+```
+
 Send email to account.
 
 ```
