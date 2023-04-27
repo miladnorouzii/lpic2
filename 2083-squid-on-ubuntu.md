@@ -12,7 +12,7 @@ vim squid.conf
 
 cache_mem 256 MB
 maximum_object_size_in_memory 512 KB
-cache_dir  ufs /var/spool/squid 100 16 256
+cache_dir  ufs /var/spool/squid 100 16 256 # 100MB cache / 16 dir /256 sub dir
 ```
 Restart squid service
 
