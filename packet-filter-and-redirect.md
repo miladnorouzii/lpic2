@@ -31,4 +31,8 @@ Persist iptables
 ```
 apt install iptables-persistent
 ```
+For save
+```
+iptables-save > /etc/iptables/roules.v4
+```
 
